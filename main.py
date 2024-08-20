@@ -8,6 +8,7 @@ import os
 import json
 import logging
 from urls import URL_TEST
+import csv
 
 # Configuraciones globales
 CONFIG = {
@@ -127,14 +128,30 @@ def get_product_data(json_data):
 
 def save_products_to_csv(products_data, filename):
     try:
-        with open(filename, 'w', encoding='utf8') as file:
-            file.write("product_id,name,weight,description,available,brand_name,price,currency,item_category,tax,sku,variant\n")
+        with open(filename, 'w', encoding='utf8', newline='') as file:
+            writer = csv.writer(file, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL)
+            writer.writerow(["product_id", "name", "weight", "description", "available", "brand_name", "price", "currency", "item_category", "tax", "sku", "variant"])
+            
             for product in products_data:
                 if product:
-                    file.write(f"{product['product_id']},{product['name']},{product['weight']},{product['description']},{product['available']},{product['brand_name']},{product['price']},{product['currency']},{product['item_category']},{product['tax']},{product['sku']},{product['variant']}\n")
+                    writer.writerow([
+                        product['product_id'],
+                        product['name'],
+                        product['weight'],
+                        product['description'],
+                        product['available'],
+                        product['brand_name'],
+                        product['price'],
+                        product['currency'],
+                        product['item_category'],
+                        product['tax'],
+                        product['sku'],
+                        product['variant']
+                    ])
         logging.info(f"Datos guardados en {filename}")
     except Exception as e:
         logging.error(f"Error al guardar datos en CSV: {e}")
+        
 
 def main(skip_scraping):
     if not skip_scraping:

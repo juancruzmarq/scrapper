@@ -12,3 +12,4 @@ __pycache__
 jsons/
 jsons.**
 products.**
+scraper.log
